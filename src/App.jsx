@@ -19,6 +19,7 @@ import { Toaster } from 'react-hot-toast';
 
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { PaymentReturn } from './pages/PaymentReturn';
 
 function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -46,6 +47,7 @@ function App() {
       {/* Auth Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/payment-return" element={<PaymentReturn />} />
 
       {/* Client Routes */}
       <Route

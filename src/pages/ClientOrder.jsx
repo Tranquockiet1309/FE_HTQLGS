@@ -21,6 +21,7 @@ import { Card, Badge } from '../components/ui';
 import { productService } from '../services/productService';
 import { orderService } from '../services/orderService';
 import { authService } from '../services/authService';
+import { paymentService } from '../services/paymentService';
 import { toast } from 'react-hot-toast';
 
 export const ClientOrder = () => {
@@ -105,8 +106,32 @@ export const ClientOrder = () => {
         ]
       };
       console.log("orderData", orderData);
-      await orderService.create(orderData);
-      toast.success("Đặt hàng thành công!");
+      const response = await orderService.create(orderData);
+      
+      if (paymentMethod === 'ewallet' && response.data) {
+        toast.success("Đặt hàng thành công, đang chuyển hướng sang VNPay...");
+        try {
+          const vnpayRequest = {
+            orderId: response.data.orderId,
+            amount: response.data.totalAmount, // Assuming the backend returns totalAmount
+            orderDescription: `Thanh toán đơn hàng #${response.data.orderId}`
+          };
+          
+          // Import paymentService dynamically or make sure it's imported at the top
+          const vnPayResponse = await paymentService.createVnPayUrl(vnpayRequest);
+          if (vnPayResponse.success && vnPayResponse.data) {
+             window.location.href = vnPayResponse.data; // Redirect to VNPay
+             return;
+          } else {
+             toast.error("Không thể tạo URL thanh toán VNPay");
+          }
+        } catch (paymentError) {
+          console.error("Payment error:", paymentError);
+          toast.error("Lỗi khi kết nối đến VNPay, nhưng đơn hàng đã được tạo.");
+        }
+      } else {
+        toast.success("Đặt hàng thành công!");
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Lỗi khi đặt hàng");
     } finally {
