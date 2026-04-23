@@ -17,13 +17,17 @@ import {
   PlusCircle,
   X,
   Image as ImageIcon,
-  ExternalLink
+  ExternalLink,
+  Tag,
+  FileText
 } from 'lucide-react';
 import { Card, Button, Badge, Modal, cn } from '../components/ui';
 import { orderService } from '../services/orderService';
 import { paymentService } from '../services/paymentService';
 import { deliveryService } from '../services/deliveryService';
 import { toast } from 'react-hot-toast';
+import QRLabel from '../components/QRLabel';
+import InvoicePDF from '../components/InvoicePDF';
 
 const steps = [
   { id: 1, title: "Laundry Bag", status: "Pending", icon: ShoppingBag, color: "amber" },
@@ -71,6 +75,8 @@ export const OrderDetails = () => {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isShipperModalOpen, setIsShipperModalOpen] = useState(false);
+  const [isQRLabelOpen, setIsQRLabelOpen] = useState(false);
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
 
   // Form states
   const [paymentAmount, setPaymentAmount] = useState(0);
@@ -182,7 +188,15 @@ export const OrderDetails = () => {
 
       <div className="flex items-center justify-between">
         <h2 className="text-4xl font-black tracking-tighter">Order · {order.orderCode}</h2>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
+          <Button variant="outline" className="gap-2 border-blue-500 text-blue-600 hover:bg-blue-50" onClick={() => setIsQRLabelOpen(true)}>
+            <Tag size={18} />
+            In nhãn QR
+          </Button>
+          <Button variant="outline" className="gap-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50" onClick={() => setIsInvoiceOpen(true)}>
+            <FileText size={18} />
+            Hóa đơn
+          </Button>
           {order.status === 'Completed' && (
             <Button variant="outline" className="gap-2 border-sky-500 text-sky-600 hover:bg-sky-50" onClick={() => setIsShipperModalOpen(true)}>
               <Truck size={18} />
@@ -454,6 +468,16 @@ export const OrderDetails = () => {
           )}
         </div>
       </Modal>
+
+      {/* QR Label Modal */}
+      {isQRLabelOpen && (
+        <QRLabel order={order} onClose={() => setIsQRLabelOpen(false)} />
+      )}
+
+      {/* Invoice PDF Modal */}
+      {isInvoiceOpen && (
+        <InvoicePDF order={order} payments={payments} onClose={() => setIsInvoiceOpen(false)} />
+      )}
     </div>
   );
 };
