@@ -173,7 +173,11 @@ export const OrderDetails = () => {
   if (!order) return null;
 
   console.log("Current Order Data:", order);
-  const proof = order.deliveryProof || order.DeliveryProof;
+  const rawProof = order.deliveryProof || order.DeliveryProof;
+  const proof = rawProof ? {
+    imageUrl: rawProof.imageUrl || rawProof.ImageUrl,
+    createdAt: rawProof.createdAt || rawProof.CreatedAt
+  } : null;
 
   const currentStepInfo = steps.find(s => s.status.toLowerCase() === order.status.toLowerCase()) || steps[0];
   const currentStep = currentStepInfo.id;
