@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://10.137.117.170:5065/api';
+const API_BASE_URL = 'http://tranquockiet-001-site1.ktempurl.com/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
