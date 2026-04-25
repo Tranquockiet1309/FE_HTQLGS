@@ -9,9 +9,9 @@ export const deliveryService = {
 
   uploadProof: async (orderId, shipperId, imageFile) => {
     const formData = new FormData();
-    formData.append('orderId', orderId);
-    formData.append('shipperId', shipperId);
-    formData.append('image', imageFile);
+    formData.append('OrderId', orderId);
+    formData.append('ShipperId', shipperId);
+    formData.append('Image', imageFile);
 
     const response = await api.post('/delivery/upload-proof', formData);
     return response.data;
