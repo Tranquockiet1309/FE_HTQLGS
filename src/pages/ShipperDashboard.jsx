@@ -354,10 +354,10 @@ const ShipperDashboard = () => {
                                             <div className="w-20 h-20 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden shrink-0 group relative">
                                                 {order.deliveryProof?.imageUrl ? (
                                                     <img 
-                                                        src={`http://10.137.117.170:5065${order.deliveryProof.imageUrl}`} 
+                                                        src={order.deliveryProof.imageUrl} 
                                                         className="w-full h-full object-cover transition-transform group-hover:scale-110" 
                                                         alt="Proof"
-                                                        onClick={() => window.open(`http://10.137.117.170:5065${order.deliveryProof.imageUrl}`, '_blank')}
+                                                        onClick={() => window.open(order.deliveryProof.imageUrl, '_blank')}
                                                     />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-slate-300">

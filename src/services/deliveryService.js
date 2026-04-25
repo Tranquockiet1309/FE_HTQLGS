@@ -13,11 +13,7 @@ export const deliveryService = {
     formData.append('shipperId', shipperId);
     formData.append('image', imageFile);
 
-    const response = await api.post('/delivery/upload-proof', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/delivery/upload-proof', formData);
     return response.data;
   },
 

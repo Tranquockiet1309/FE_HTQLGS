@@ -3,6 +3,14 @@
     {
       "source": "/api/:path*",
       "destination": "http://tranquockiet-001-site1.ktempurl.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "http://tranquockiet-001-site1.ktempurl.com/uploads/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
