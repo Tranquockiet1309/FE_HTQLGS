@@ -351,10 +351,10 @@ export const OrderDetails = () => {
                 <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3 h-64 md:h-auto bg-slate-100 dark:bg-slate-800 relative group overflow-hidden">
                         <img 
-                            src={`http://10.137.117.170:5065${proof.imageUrl}`} 
+                            src={proof.imageUrl} 
                             alt="Bằng chứng giao hàng" 
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 cursor-pointer"
-                            onClick={() => window.open(`http://10.137.117.170:5065${proof.imageUrl}`, '_blank')}
+                            onClick={() => window.open(proof.imageUrl, '_blank')}
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <ExternalLink className="text-white" size={32} />
