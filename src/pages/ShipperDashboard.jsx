@@ -111,8 +111,8 @@ const ShipperDashboard = () => {
     };
 
     const stats = {
-        pending: orders.filter(o => o.status !== 'Delivered' && o.status !== 'Arrived').length,
-        arrived: orders.filter(o => o.status === 'Arrived').length,
+        pending: orders.filter(o => (o.status !== 'Delivered' && o.status !== 7) && (o.status !== 'Arrived' && o.status !== 6)).length,
+        arrived: orders.filter(o => (o.status === 'Arrived' || o.status === 6)).length,
         today: historyOrders.filter(o => {
             const date = new Date(o.completedAt);
             const today = new Date();
@@ -186,7 +186,7 @@ const ShipperDashboard = () => {
                                         : 'text-slate-500'
                                     )}
                                 >
-                                    Chờ giao ({orders.filter(o => o.status !== 'Arrived').length})
+                                    Chờ giao ({orders.filter(o => (o.status !== 'Arrived' && o.status !== 6)).length})
                                 </button>
                                 <button 
                                     onClick={() => setActiveTab('completed')}
@@ -197,12 +197,12 @@ const ShipperDashboard = () => {
                                         : 'text-slate-500'
                                     )}
                                 >
-                                    Đã đến điểm ({orders.filter(o => o.status === 'Arrived').length})
+                                    Đã đến điểm ({orders.filter(o => (o.status === 'Arrived' || o.status === 6)).length})
                                 </button>
                             </div>
 
                             <div className="space-y-4">
-                                {orders.filter(o => activeTab === 'pending' ? o.status !== 'Arrived' : o.status === 'Arrived').length === 0 ? (
+                                {orders.filter(o => activeTab === 'pending' ? (o.status !== 'Arrived' && o.status !== 6) : (o.status === 'Arrived' || o.status === 6)).length === 0 ? (
                                     <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-[2rem] border-2 border-dashed border-slate-100 dark:border-slate-800">
                                         <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
                                             <Package size={32} className="text-slate-300" />
@@ -211,7 +211,7 @@ const ShipperDashboard = () => {
                                     </div>
                                 ) : (
                                     orders
-                                    .filter(o => activeTab === 'pending' ? o.status !== 'Arrived' : o.status === 'Arrived')
+                                    .filter(o => activeTab === 'pending' ? (o.status !== 'Arrived' && o.status !== 6) : (o.status === 'Arrived' || o.status === 6))
                                     .map((order) => (
                                         <Card key={order.orderId} className="p-0 overflow-hidden border-none shadow-lg shadow-slate-200/50 dark:shadow-none">
                                             <div className="p-5 border-b border-slate-50 dark:border-slate-800">
@@ -227,8 +227,8 @@ const ShipperDashboard = () => {
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <Badge variant={order.status === 'Arrived' ? 'success' : 'primary'} className="text-[9px] px-2 py-0.5 font-black uppercase">
-                                                        {order.status === 'Arrived' ? 'Đã đến nơi' : 'Đang giao'}
+                                                    <Badge variant={(order.status === 'Arrived' || order.status === 6) ? 'success' : 'primary'} className="text-[9px] px-2 py-0.5 font-black uppercase">
+                                                        {(order.status === 'Arrived' || order.status === 6) ? 'Đã đến nơi' : 'Đang giao'}
                                                     </Badge>
                                                 </div>
 
@@ -262,7 +262,7 @@ const ShipperDashboard = () => {
                                                         Gọi điện
                                                     </button>
                                                     
-                                                    {order.status === 'Arrived' && (
+                                                    {((order.status === 'Arrived' || order.status === 6) || order.status === 6) && (
                                                         <motion.div 
                                                             initial={{ opacity: 0, scale: 0.9 }}
                                                             animate={{ opacity: 1, scale: 1 }}
@@ -299,7 +299,7 @@ const ShipperDashboard = () => {
                                                     )}
                                                 </div>
 
-                                                {order.status !== 'Arrived' && (
+                                                {(order.status !== 'Arrived' && order.status !== 6) && (
                                                     <div className="relative h-14 bg-slate-200 dark:bg-slate-800 rounded-2xl p-1 overflow-hidden">
                                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
