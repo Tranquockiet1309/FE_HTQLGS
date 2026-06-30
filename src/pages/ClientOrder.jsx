@@ -41,6 +41,9 @@ export const ClientOrder = () => {
 
   const [appointmentDate, setAppointmentDate] = useState(new Date().toISOString().split('T')[0]);
   const [appointmentTime, setAppointmentTime] = useState('10:00');
+  
+  const [pointBalance, setPointBalance] = useState(0);
+  const [redeemedPoints, setRedeemedPoints] = useState(0);
 
   React.useEffect(() => {
     const initPage = async () => {
@@ -66,6 +69,17 @@ export const ClientOrder = () => {
           phone: response.data.phone || '',
           address: response.data.address || ''
         });
+        
+        // Fetch points
+        if (response.data.customerId) {
+          import('../services/customerService').then(({ customerService }) => {
+            customerService.getById(response.data.customerId).then(res => {
+              if (res.success && res.data) {
+                setPointBalance(res.data.pointBalance || 0);
+              }
+            }).catch(err => console.error("Could not fetch points", err));
+          });
+        }
       }
     } catch (error) {
       console.error("Lỗi khi tải thông tin người dùng", error);
@@ -93,7 +107,7 @@ export const ClientOrder = () => {
       const promisedAt = new Date(`${dateStr}T${timeStr}:00`);
 
       const orderData = {
-        customerId: customerInfo.userId,
+        customerId: 0, // Backend tự resolve customerId từ JWT token (tránh nhầm userId)
         receiveMethod: "DELIVERY",
         promisedAt: isNaN(promisedAt.getTime()) ? null : promisedAt.toISOString(),
         orderNote: `Địa chỉ: ${customerInfo.address} | SĐT: ${customerInfo.phone} | Khách: ${customerInfo.fullName}`,
@@ -103,7 +117,8 @@ export const ClientOrder = () => {
             quantity: weight,
             itemDescription: "Đơn hàng đặt từ Client Page"
           }
-        ]
+        ],
+        redeemedPoints: redeemedPoints
       };
       console.log("orderData", orderData);
       const response = await orderService.create(orderData);
@@ -145,6 +160,48 @@ export const ClientOrder = () => {
     { id: 'ewallet', name: 'Ví điện tử', icon: Wallet, extra: 'MoMo/VNPAY' },
   ];
 
+  const [locating, setLocating] = React.useState(false);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error('Trình duyệt không hỗ trợ GPS');
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        const { latitude: lat, longitude: lng } = coords;
+
+        // 1. Mở Google Maps với tọa độ hiện tại
+        window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+
+        // 2. Reverse geocoding bằng Nominatim (điền địa chỉ vào ô input)
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+            { headers: { 'Accept-Language': 'vi' } }
+          );
+          const data = await res.json();
+          const addr = data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+          setCustomerInfo(prev => ({ ...prev, address: addr }));
+          toast.success('Đã điền địa chỉ tự động!');
+        } catch {
+          // Nếu geocoding lỗi, điền tọa độ thệ
+          setCustomerInfo(prev => ({ ...prev, address: `${lat.toFixed(6)}, ${lng.toFixed(6)}` }));
+          toast.success('Vị trí đã được cập nhật!');
+        } finally {
+          setLocating(false);
+        }
+      },
+      (err) => {
+        setLocating(false);
+        if (err.code === 1) toast.error('Bạn đã từ chối quyền truy cập vị trí');
+        else toast.error('Không thể lấy vị trí hiện tại');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-1">
@@ -173,9 +230,13 @@ export const ClientOrder = () => {
               onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
             />
             <div className="grid grid-cols-2 gap-2 mt-3">
-              <button className="flex items-center justify-center gap-2 py-2 px-3 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-lg text-[11px] font-bold hover:bg-sky-100 transition-all">
-                <Navigation size={14} />
-                Dùng vị trí hiện tại
+              <button
+                onClick={handleGetLocation}
+                disabled={locating}
+                className="flex items-center justify-center gap-2 py-2 px-3 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-lg text-[11px] font-bold hover:bg-sky-100 transition-all disabled:opacity-60 disabled:cursor-wait"
+              >
+                <Navigation size={14} className={locating ? 'animate-pulse' : ''} />
+                {locating ? 'Đang lấy vị trí...' : 'Dùng vị trí hiện tại'}
               </button>
               <button className="flex items-center justify-center gap-2 py-2 px-3 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg text-[11px] font-bold hover:bg-slate-100 transition-all border border-slate-100 dark:border-slate-700">
                 <List size={14} />
@@ -350,15 +411,39 @@ export const ClientOrder = () => {
                   {(services.find(s => s.serviceId === selectedService)?.unitPrice || 0).toLocaleString()}đ/{services.find(s => s.serviceId === selectedService)?.unit || 'kg'}
                 </span>
               </div>
+              
+              {pointBalance > 0 && (
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-700 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Sử dụng điểm thưởng</span>
+                    <Badge variant="warning">{pointBalance} điểm</Badge>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="number" 
+                      min="0" 
+                      max={pointBalance}
+                      value={redeemedPoints}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value) || 0;
+                        setRedeemedPoints(Math.min(val, pointBalance));
+                      }}
+                      className="w-20 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-1 px-2 text-sm outline-none focus:ring-1 focus:ring-sky-500"
+                    />
+                    <span className="text-xs text-slate-500">điểm = -{(redeemedPoints * 100).toLocaleString()}đ</span>
+                  </div>
+                </div>
+              )}
+
               <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
                 <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Tổng cộng ước tính</span>
                 <span className="text-2xl font-black text-sky-600">
-                  {((services.find(s => s.serviceId === selectedService)?.unitPrice || 0) * weight).toLocaleString()}đ
+                  {Math.max(0, ((services.find(s => s.serviceId === selectedService)?.unitPrice || 0) * weight) - (redeemedPoints * 100)).toLocaleString()}đ
                 </span>
               </div>
               <div className="flex items-center gap-2 text-[10px] text-slate-400 bg-white dark:bg-slate-800/50 p-2 rounded-lg mt-2">
                 <Info size={12} />
-                <span>Thời gian: {new Date().toLocaleDateString('vi-VN')}</span>
+                <span>Thời gian hẹn: {appointmentTime} - {new Date(appointmentDate).toLocaleDateString('vi-VN')}</span>
               </div>
             </div>
           </Card>

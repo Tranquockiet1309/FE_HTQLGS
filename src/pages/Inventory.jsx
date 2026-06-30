@@ -13,11 +13,12 @@ import { toast } from 'react-hot-toast';
 
 export const Inventory = () => {
   const [transactions, setTransactions] = useState([]);
+  const [balances, setBalances] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Forms State
-  const [inForm, setInForm] = useState({ itemName: 'Soap', quantity: 0, unit: 'kg', unitCost: 0, referenceNote: '' });
-  const [outForm, setOutForm] = useState({ itemName: 'Soap', quantity: 0, unit: 'kg', referenceNote: '' });
+  const [inForm, setInForm] = useState({ itemName: 'Nước giặt', quantity: 0, unit: 'ml', unitCost: 0, referenceNote: '' });
+  const [outForm, setOutForm] = useState({ itemName: 'Nước xả', quantity: 0, unit: 'ml', referenceNote: '' });
 
   const fetchTransactions = async () => {
     try {
@@ -25,6 +26,10 @@ export const Inventory = () => {
       const response = await productService.getInventory();
       if (response.success) {
         setTransactions(response.data || []);
+      }
+      const balanceResponse = await productService.getInventoryBalance();
+      if (balanceResponse.success) {
+        setBalances(balanceResponse.data || []);
       }
     } catch (error) {
       toast.error('Lỗi khi tải lịch sử kho');
@@ -103,9 +108,10 @@ export const Inventory = () => {
                 value={inForm.itemName} onChange={e => setInForm({...inForm, itemName: e.target.value})}
                 className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-sky-500 font-bold transition-all"
               >
-                <option value="Soap">Soap</option>
-                <option value="Softener">Softener</option>
-                <option value="Bleach">Bleach</option>
+                <option value="Nước giặt">Nước giặt</option>
+                <option value="Nước xả">Nước xả</option>
+                <option value="Thuốc tẩy">Thuốc tẩy</option>
+                <option value="Khác">Khác</option>
               </select>
             </div>
             <div className="space-y-2">
@@ -150,9 +156,10 @@ export const Inventory = () => {
                 value={outForm.itemName} onChange={e => setOutForm({...outForm, itemName: e.target.value})}
                 className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-indigo-500 font-bold transition-all"
               >
-                <option value="Soap">Soap</option>
-                <option value="Softener">Softener</option>
-                <option value="Bleach">Bleach</option>
+                <option value="Nước giặt">Nước giặt</option>
+                <option value="Nước xả">Nước xả</option>
+                <option value="Thuốc tẩy">Thuốc tẩy</option>
+                <option value="Khác">Khác</option>
               </select>
             </div>
             <div className="space-y-2">
@@ -173,6 +180,38 @@ export const Inventory = () => {
           <Button onClick={handleUsage} className="w-full h-14 text-lg bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-500/20 mt-auto pt-6">Log Usage (Ghi log sử dụng)</Button>
         </Card>
       </div>
+
+      <Card>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold tracking-tight">Tồn kho hiện tại</h3>
+        </div>
+        
+        {loading ? (
+          <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div></div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {balances.length === 0 ? (
+              <p className="text-slate-500 text-sm">Chưa có dữ liệu tồn kho.</p>
+            ) : (
+              balances.map((b, idx) => (
+                <div key={idx} className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+                  <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-2 text-lg">{b.itemName}</h4>
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <span className="text-4xl font-black text-indigo-600">{b.currentBalance}</span>
+                      <span className="text-slate-400 font-bold ml-1">{b.unit}</span>
+                    </div>
+                    <div className="text-right text-xs text-slate-400 font-medium space-y-1">
+                      <p>Tổng nhập: <span className="text-emerald-500">{b.totalIn}</span></p>
+                      <p>Tổng xuất: <span className="text-rose-500">{b.totalOut}</span></p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </Card>
 
       <Card>
         <div className="flex items-center justify-between mb-6">

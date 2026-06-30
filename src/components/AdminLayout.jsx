@@ -1,5 +1,6 @@
 import { Sidebar, Navbar } from './Layout';
 import { Outlet } from 'react-router-dom';
+import { SupportChatWidget } from './SupportChatWidget';
 
 export const AdminLayout = ({ isDark, setIsDark }) => {
   return (
@@ -11,6 +12,7 @@ export const AdminLayout = ({ isDark, setIsDark }) => {
           <Outlet />
         </main>
       </div>
+      <SupportChatWidget />
     </div>
   );
 };

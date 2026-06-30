@@ -24,5 +24,12 @@ export const customerService = {
   delete: async (id) => {
     const response = await api.delete(`/v1/customers/${id}`);
     return response.data;
-  }
+  },
+
+  // Khách hàng tự cập nhật địa chỉ của mình
+  updateMyAddress: async (address) => {
+    const response = await api.put('/v1/customers/me/address', { address });
+    return response.data;
+  },
 };
+

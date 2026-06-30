@@ -11,7 +11,9 @@ import {
   CheckCircle2,
   XCircle,
   Link2,
-  ChevronRight
+  ChevronRight,
+  Trash2,
+  UserPlus
 } from 'lucide-react';
 import { deliveryService } from '../services/deliveryService';
 import { usersService } from '../services/usersService';
@@ -24,9 +26,15 @@ export const Shippers = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
+  // Link Modal
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
   const [selectedShipper, setSelectedShipper] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  // Create Modal
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newShipper, setNewShipper] = useState({ name: '', phone: '' });
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -61,6 +69,36 @@ export const Shippers = () => {
     }
   };
 
+  const handleCreateShipper = async () => {
+    if (!newShipper.name.trim() || !newShipper.phone.trim()) {
+      toast.error("Vui lòng nhập đầy đủ Tên và Số điện thoại");
+      return;
+    }
+    setCreating(true);
+    try {
+      await deliveryService.createShipper(newShipper);
+      toast.success("Thêm shipper thành công! 🎉");
+      setIsCreateModalOpen(false);
+      setNewShipper({ name: '', phone: '' });
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Lỗi khi tạo shipper");
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleDeleteShipper = async (shipper) => {
+    if (!window.confirm(`Bạn chắc chắn muốn xóa shipper "${shipper.name}"?`)) return;
+    try {
+      await deliveryService.deleteShipper(shipper.shipperId);
+      toast.success("Đã xóa shipper");
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Lỗi khi xóa shipper");
+    }
+  };
+
   const filteredShippers = shippers.filter(s => 
     s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.phone.includes(searchTerm)
@@ -84,7 +122,7 @@ export const Shippers = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => setIsCreateModalOpen(true)}>
             <Plus size={18} /> Thêm Shipper
           </Button>
         </div>
@@ -105,7 +143,7 @@ export const Shippers = () => {
                   <div className="w-12 h-12 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center">
                     <Truck size={24} />
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
                     {shipper.userId ? (
                       <Badge variant="success" className="gap-1">
                         <CheckCircle2 size={12} /> Đã liên kết
@@ -115,6 +153,13 @@ export const Shippers = () => {
                         <XCircle size={12} /> Chưa liên kết
                       </Badge>
                     )}
+                    <button 
+                      onClick={() => handleDeleteShipper(shipper)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all opacity-0 group-hover:opacity-100"
+                      title="Xóa shipper"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 </div>
 
@@ -151,7 +196,64 @@ export const Shippers = () => {
         </AnimatePresence>
       </div>
 
-      {/* Link User Modal */}
+      {/* ── Create Shipper Modal ── */}
+      <Modal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        title="Thêm Shipper mới"
+      >
+        <div className="space-y-5">
+          <p className="text-sm text-slate-500">Nhập thông tin nhân viên giao hàng mới.</p>
+          
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-black text-slate-500 uppercase tracking-wider">Họ và tên <span className="text-rose-500">*</span></label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input 
+                  type="text"
+                  placeholder="Ví dụ: Nguyễn Văn A"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm"
+                  value={newShipper.name}
+                  onChange={(e) => setNewShipper({...newShipper, name: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-black text-slate-500 uppercase tracking-wider">Số điện thoại <span className="text-rose-500">*</span></label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input 
+                  type="tel"
+                  placeholder="Ví dụ: 0901 234 567"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all text-sm"
+                  value={newShipper.phone}
+                  onChange={(e) => setNewShipper({...newShipper, phone: e.target.value})}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button 
+              onClick={() => setIsCreateModalOpen(false)}
+              className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+            >
+              Hủy
+            </button>
+            <Button 
+              className="flex-1 h-12 text-sm gap-2" 
+              disabled={creating || !newShipper.name.trim() || !newShipper.phone.trim()}
+              onClick={handleCreateShipper}
+            >
+              {creating ? 'Đang tạo...' : <><UserPlus size={16} /> Thêm Shipper</>}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* ── Link User Modal ── */}
       <Modal 
         isOpen={isLinkModalOpen} 
         onClose={() => setIsLinkModalOpen(false)} 

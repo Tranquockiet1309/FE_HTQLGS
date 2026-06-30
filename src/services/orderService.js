@@ -11,6 +11,12 @@ export const orderService = {
     return response.data;
   },
 
+  // Lấy đơn hàng của khách đang đăng nhập
+  getMyOrders: async () => {
+    const response = await api.get('/v1/orders/my');
+    return response.data;
+  },
+
   create: async (orderData) => {
     const response = await api.post('/v1/orders', orderData);
     return response.data;
@@ -26,3 +32,4 @@ export const orderService = {
     return response.data;
   }
 };
+

@@ -123,7 +123,7 @@ const InvoicePDF = ({ order, payments, onClose }) => {
                 <p className="text-xs text-slate-600">Mã đơn: <strong className="text-slate-800">{order.orderCode}</strong></p>
                 <p className="text-xs text-slate-600">Nhận: {new Date(order.receivedAt).toLocaleDateString('vi-VN')}</p>
                 {order.promisedAt && (
-                  <p className="text-xs text-slate-600">Hẹn trả: <strong className="text-red-600">{new Date(order.promisedAt).toLocaleDateString('vi-VN')}</strong></p>
+                  <p className="text-xs text-slate-600">Hẹn trả: <strong className="text-red-600">{new Date(order.promisedAt).toLocaleString('vi-VN')}</strong></p>
                 )}
                 <p className="text-xs text-slate-600">Hình thức: {order.receiveMethod === 'AT_STORE' ? 'Tại cửa hàng' : 'Giao hàng'}</p>
               </div>

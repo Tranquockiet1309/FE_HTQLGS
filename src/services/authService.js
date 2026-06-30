@@ -17,12 +17,9 @@ export const authService = {
   register: async (userData) => {
     try {
       console.log("CALL REGISTER API");
-
       const response = await api.post('/v1/auth/register', userData);
-
       console.log("RESPONSE", response);
       return response.data;
-
     } catch (err) {
       console.log("REGISTER ERROR FULL:", err);
       console.log("MESSAGE:", err.message);
@@ -53,5 +50,24 @@ export const authService = {
 
   getToken: () => {
     return localStorage.getItem('token');
-  }
+  },
+
+  // Đổi mật khẩu (yêu cầu đăng nhập)
+  changePassword: async (currentPassword, newPassword) => {
+    const response = await api.post('/v1/auth/change-password', {
+      currentPassword,
+      newPassword,
+    });
+    return response.data;
+  },
+
+  // Quên mật khẩu (xác minh qua SĐT)
+  forgotPassword: async (phone, newPassword) => {
+    const response = await api.post('/v1/auth/forgot-password', {
+      phone,
+      newPassword,
+    });
+    return response.data;
+  },
 };
+

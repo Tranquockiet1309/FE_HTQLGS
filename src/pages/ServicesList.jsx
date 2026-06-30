@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Plus, Edit2, Trash2, Clock, Scale, ToggleLeft, ToggleRight, AlertTriangle } from 'lucide-react';
+import { Settings, Plus, Edit2, Trash2, Clock, Scale, ToggleLeft, ToggleRight, AlertTriangle, Droplets } from 'lucide-react';
 import { Card, Button, Badge, Modal } from '../components/ui';
 import { productService } from '../services/productService';
 import { toast } from 'react-hot-toast';
@@ -9,6 +9,8 @@ const EMPTY_FORM = {
   unit: '',
   unitPrice: '',
   estimatedHours: '',
+  detergentUsage: '',
+  softenerUsage: '',
   isActive: true,
 };
 
@@ -51,6 +53,8 @@ export const ServicesList = () => {
       unit:           svc.unit,
       unitPrice:      String(svc.unitPrice),
       estimatedHours: svc.estimatedHours != null ? String(svc.estimatedHours) : '',
+      detergentUsage: svc.detergentUsage != null ? String(svc.detergentUsage) : '',
+      softenerUsage:  svc.softenerUsage != null ? String(svc.softenerUsage) : '',
       isActive:       svc.isActive,
     });
     setIsModalOpen(true);
@@ -70,6 +74,8 @@ export const ServicesList = () => {
         ...formData,
         unitPrice:      parseFloat(formData.unitPrice),
         estimatedHours: formData.estimatedHours ? parseInt(formData.estimatedHours) : null,
+        detergentUsage: formData.detergentUsage ? parseFloat(formData.detergentUsage) : null,
+        softenerUsage:  formData.softenerUsage ? parseFloat(formData.softenerUsage) : null,
       };
 
       if (editingId) {
@@ -282,6 +288,48 @@ export const ServicesList = () => {
                 placeholder="2, 4, 24..."
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/10 transition-all dark:text-white"
               />
+            </div>
+          </div>
+
+          {/* Material Usage */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-wider ml-1">
+                Tiêu hao Nước giặt (ml)
+              </label>
+              <div className="relative group">
+                <Droplets
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors"
+                  size={18}
+                />
+                <input
+                  type="number"
+                  min={0}
+                  value={formData.detergentUsage}
+                  onChange={(e) => setFormData({ ...formData, detergentUsage: e.target.value })}
+                  placeholder="50, 60..."
+                  className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/10 transition-all dark:text-white"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-wider ml-1">
+                Tiêu hao Nước xả (ml)
+              </label>
+              <div className="relative group">
+                <Droplets
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors"
+                  size={18}
+                />
+                <input
+                  type="number"
+                  min={0}
+                  value={formData.softenerUsage}
+                  onChange={(e) => setFormData({ ...formData, softenerUsage: e.target.value })}
+                  placeholder="30, 40..."
+                  className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/10 transition-all dark:text-white"
+                />
+              </div>
             </div>
           </div>
 

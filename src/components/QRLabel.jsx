@@ -12,7 +12,7 @@ const QRLabel = ({ order, onClose }) => {
     customer: order.customerName,
     phone: order.customerPhone || '',
     services: order.items?.map(i => i.serviceName).join(', ') || '',
-    promised: order.promisedAt ? new Date(order.promisedAt).toLocaleDateString('vi-VN') : 'N/A',
+    promised: order.promisedAt ? new Date(order.promisedAt).toLocaleString('vi-VN') : 'N/A',
   });
 
   const handlePrint = () => {
@@ -72,7 +72,7 @@ const QRLabel = ({ order, onClose }) => {
       <p>${order.customerName || 'N/A'}</p>
       <p class="phone">${order.customerPhone || ''}</p>
       <p class="service">${order.items?.map(i => i.serviceName).join(' · ') || 'N/A'}</p>
-      <p class="promised">Hẹn: ${order.promisedAt ? new Date(order.promisedAt).toLocaleDateString('vi-VN') : 'N/A'}</p>
+      <p class="promised">Hẹn: ${order.promisedAt ? new Date(order.promisedAt).toLocaleString('vi-VN') : 'N/A'}</p>
     </div>
   `;
 
@@ -120,7 +120,7 @@ const QRLabel = ({ order, onClose }) => {
                     {order.items?.map(i => i.serviceName).join(' · ') || 'N/A'}
                   </p>
                   <p className="text-[10px] font-black text-red-600 mt-1">
-                    Hẹn: {order.promisedAt ? new Date(order.promisedAt).toLocaleDateString('vi-VN') : 'Chưa có'}
+                    Hẹn: {order.promisedAt ? new Date(order.promisedAt).toLocaleString('vi-VN') : 'Chưa có'}
                   </p>
                 </div>
               </div>

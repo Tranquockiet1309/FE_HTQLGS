@@ -12,6 +12,8 @@ import { OrderDetails } from './pages/OrderDetails';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Inventory } from './pages/Inventory';
 import { ClientOrder } from './pages/ClientOrder';
+import { MyOrders } from './pages/MyOrders';
+import { Contact } from './pages/Contact';
 import { Shippers } from './pages/Shippers';
 import ShipperDashboard from './pages/ShipperDashboard';
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -20,6 +22,7 @@ import { Toaster } from 'react-hot-toast';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { PaymentReturn } from './pages/PaymentReturn';
+import { ForgotPassword } from './pages/ForgotPassword';
 
 function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -47,6 +50,7 @@ function App() {
       {/* Auth Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/payment-return" element={<PaymentReturn />} />
 
       {/* Client Routes */}
@@ -59,6 +63,8 @@ function App() {
         }
       >
         <Route index element={<ClientOrder />} />
+        <Route path="my-orders" element={<MyOrders />} />
+        <Route path="contact" element={<Contact />} />
       </Route>
 
       {/* Shipper Routes */}

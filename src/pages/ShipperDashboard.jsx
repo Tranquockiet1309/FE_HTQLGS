@@ -249,7 +249,13 @@ const ShipperDashboard = () => {
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Địa chỉ giao</p>
-                                                            <p className="text-sm font-medium text-slate-600 dark:text-slate-400 line-clamp-2">Cần Thơ, Việt Nam (Tọa độ GPS)</p>
+                                                            <p className="text-sm font-medium text-slate-600 dark:text-slate-400 line-clamp-2">
+                                                              {order.customerAddress || (() => {
+                                                                const note = order.orderNote || '';
+                                                                const match = note.match(/Địa chỉ:\s*([^|]+)/);
+                                                                return match ? match[1].trim() : 'Chưa có địa chỉ';
+                                                              })()}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -257,10 +263,13 @@ const ShipperDashboard = () => {
 
                                             <div className="p-4 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col gap-3">
                                                 <div className="flex gap-3">
-                                                    <button className="flex-1 h-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-center gap-2 font-bold text-sm text-slate-700 dark:text-slate-200 active:scale-95 transition-all">
+                                                     <a
+                                                        href={`tel:${order.customerPhone || (() => { const m = (order.orderNote||'').match(/SĐT:\s*([^|]+)/); return m ? m[1].trim() : ''; })()}`}
+                                                        className="flex-1 h-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-center gap-2 font-bold text-sm text-slate-700 dark:text-slate-200 active:scale-95 transition-all no-underline"
+                                                    >
                                                         <Phone size={18} className="text-emerald-500" />
                                                         Gọi điện
-                                                    </button>
+                                                    </a>
                                                     
                                                     {((order.status === 'Arrived' || order.status === 6) || order.status === 6) && (
                                                         <motion.div 

@@ -48,5 +48,15 @@ export const deliveryService = {
   getMyHistory: async () => {
     const response = await api.get('/delivery/my-history');
     return response.data;
+  },
+
+  createShipper: async (data) => {
+    const response = await api.post('/delivery/shippers', data);
+    return response.data;
+  },
+
+  deleteShipper: async (id) => {
+    const response = await api.delete(`/delivery/shippers/${id}`);
+    return response.data;
   }
 };

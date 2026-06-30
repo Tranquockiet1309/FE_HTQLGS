@@ -38,5 +38,10 @@ export const productService = {
   createInventoryTxn: async (data) => {
     const response = await api.post('/v1/inventory', data);
     return response.data;
+  },
+
+  getInventoryBalance: async () => {
+    const response = await api.get('/v1/inventory/balance');
+    return response.data;
   }
 };
