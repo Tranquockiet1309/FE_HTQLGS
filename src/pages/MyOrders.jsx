@@ -169,7 +169,11 @@ export const MyOrders = () => {
     { key: 'all',       label: 'Tất cả' },
     { key: 'Pending',   label: 'Chờ xử lý' },
     { key: 'Washing',   label: 'Đang giặt' },
+    { key: 'Drying',    label: 'Đang sấy' },
+    { key: 'Ironing',   label: 'Đang ủi' },
     { key: 'Completed', label: 'Hoàn thành' },
+    { key: 'Shipped',   label: 'Đang giao' },
+    { key: 'Arrived',   label: 'Đã đến nơi' },
     { key: 'Delivered', label: 'Đã nhận' },
     { key: 'Cancelled', label: 'Đã hủy' },
   ];
