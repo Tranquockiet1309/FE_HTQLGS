@@ -30,12 +30,15 @@ import QRLabel from '../components/QRLabel';
 import InvoicePDF from '../components/InvoicePDF';
 
 const steps = [
-  { id: 1, title: "Laundry Bag", status: "Pending", icon: ShoppingBag, color: "amber" },
-  { id: 2, title: "Washing", status: "Washing", icon: RotateCcw, color: "blue" },
-  { id: 3, title: "Drying", status: "Drying", icon: Wind, color: "sky" },
-  { id: 4, title: "Ironing", status: "Ironing", icon: History, color: "indigo" },
-  { id: 5, title: "Completed", status: "Completed", icon: PackageCheck, color: "emerald" },
-  { id: 6, title: "Delivered", status: "Delivered", icon: Handshake, color: "rose" },
+  { id: 1, title: "Chờ xử lý", status: "Pending", icon: ShoppingBag, color: "amber" },
+  { id: 2, title: "Đang giặt", status: "Washing", icon: RotateCcw, color: "blue" },
+  { id: 3, title: "Đang sấy", status: "Drying", icon: Wind, color: "sky" },
+  { id: 4, title: "Đang ủi", status: "Ironing", icon: History, color: "indigo" },
+  { id: 5, title: "Hoàn thành", status: "Completed", icon: PackageCheck, color: "emerald" },
+  { id: 6, title: "Đang giao", status: "Shipped", icon: Truck, color: "indigo" },
+  { id: 7, title: "Đã đến", status: "Arrived", icon: Truck, color: "teal" },
+  { id: 8, title: "Đã nhận", status: "Delivered", icon: Handshake, color: "green" },
+  { id: 9, title: "Đã hủy", status: "Cancelled", icon: X, color: "rose" },
 ];
 
 const StepIcon = ({ icon: Icon, color, isActive, isCompleted, title, status }) => (
@@ -222,7 +225,7 @@ export const OrderDetails = () => {
         <div className="absolute top-1/2 left-12 right-12 h-1 bg-slate-100 dark:bg-slate-800 -translate-y-[4.5rem]">
           <motion.div 
             initial={{ width: 0 }}
-            animate={{ width: `${(currentStep - 1) * 20}%` }}
+            animate={{ width: `${(currentStep - 1) * 12.5}%` }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className="h-full bg-gradient-to-r from-primary-500 to-sky-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
           />
