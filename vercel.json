@@ -9,6 +9,10 @@
       "destination": "https://tranquockiet13-001-site1.ltempurl.com/uploads/:path*"
     },
     {
+      "source": "/hub/:path*",
+      "destination": "https://tranquockiet13-001-site1.ltempurl.com/hub/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
