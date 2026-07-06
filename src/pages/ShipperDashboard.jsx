@@ -250,17 +250,17 @@ const ShipperDashboard = () => {
                                                         <div className="flex-1 min-w-0">
                                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Địa chỉ giao</p>
                                                             <p className="text-sm font-medium text-slate-600 dark:text-slate-400 line-clamp-2 mb-2">
-                                                              {order.customerAddress || (() => {
+                                                              {(() => {
                                                                 const note = order.orderNote || '';
                                                                 const match = note.match(/Địa chỉ:\s*([^|]+)/);
-                                                                return match ? match[1].trim() : 'Chưa có địa chỉ';
+                                                                return (match ? match[1].trim() : order.customerAddress) || 'Chưa có địa chỉ';
                                                               })()}
                                                             </p>
                                                             {(() => {
-                                                                const address = order.customerAddress || (() => {
+                                                                const address = (() => {
                                                                     const note = order.orderNote || '';
                                                                     const match = note.match(/Địa chỉ:\s*([^|]+)/);
-                                                                    return match ? match[1].trim() : null;
+                                                                    return match ? match[1].trim() : order.customerAddress;
                                                                 })();
                                                                 return address && address !== 'Chưa có địa chỉ' ? (
                                                                     <button 

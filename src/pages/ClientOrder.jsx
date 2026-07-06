@@ -172,8 +172,7 @@ export const ClientOrder = () => {
       async ({ coords }) => {
         const { latitude: lat, longitude: lng } = coords;
 
-        // 1. Mở Google Maps với tọa độ hiện tại
-        window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+     
 
         // 2. Reverse geocoding bằng Nominatim (điền địa chỉ vào ô input)
         try {
