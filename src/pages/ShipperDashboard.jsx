@@ -249,13 +249,29 @@ const ShipperDashboard = () => {
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Địa chỉ giao</p>
-                                                            <p className="text-sm font-medium text-slate-600 dark:text-slate-400 line-clamp-2">
+                                                            <p className="text-sm font-medium text-slate-600 dark:text-slate-400 line-clamp-2 mb-2">
                                                               {order.customerAddress || (() => {
                                                                 const note = order.orderNote || '';
                                                                 const match = note.match(/Địa chỉ:\s*([^|]+)/);
                                                                 return match ? match[1].trim() : 'Chưa có địa chỉ';
                                                               })()}
                                                             </p>
+                                                            {(() => {
+                                                                const address = order.customerAddress || (() => {
+                                                                    const note = order.orderNote || '';
+                                                                    const match = note.match(/Địa chỉ:\s*([^|]+)/);
+                                                                    return match ? match[1].trim() : null;
+                                                                })();
+                                                                return address && address !== 'Chưa có địa chỉ' ? (
+                                                                    <button 
+                                                                        onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, '_blank')}
+                                                                        className="px-3 py-1.5 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap inline-flex"
+                                                                    >
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                                        Mở Bản đồ
+                                                                    </button>
+                                                                ) : null;
+                                                            })()}
                                                         </div>
                                                     </div>
                                                 </div>
