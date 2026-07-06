@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://tranquockiet-001-site1.ktempurl.com/api/:path*"
+      "destination": "https://tranquockiet13-001-site1.ltempurl.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "http://tranquockiet-001-site1.ktempurl.com/uploads/:path*"
+      "destination": "https://tranquockiet13-001-site1.ltempurl.com/uploads/:path*"
     },
     {
       "source": "/(.*)",

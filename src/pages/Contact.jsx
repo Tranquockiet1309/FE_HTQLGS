@@ -176,7 +176,7 @@ export const Contact = () => {
         {/* ===== FOOTER BUTTONS ===== */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
           <a
-            href="tel:0900999333"
+            href="tel:0913165621"
             className="flex items-center justify-center gap-3 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black shadow-lg shadow-emerald-500/30 hover:scale-[1.02] transition-all"
           >
             <Phone size={20} />
