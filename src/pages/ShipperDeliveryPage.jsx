@@ -105,11 +105,27 @@ const ShipperDeliveryPage = () => {
                                 </div>
                             </div>
                             
-                            <div className="mb-6 p-3 bg-slate-950/50 rounded-xl border border-slate-800">
+                            <div className="mb-6 p-3 bg-slate-950/50 rounded-xl border border-slate-800 space-y-2">
                                 <p className="text-sm text-slate-400 flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
                                     Khách hàng: <span className="text-slate-200 font-medium">{order.customerName}</span>
                                 </p>
+                                {order.customerAddress && (
+                                    <div className="flex items-start gap-2 pt-2 mt-2 border-t border-slate-800/50">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5"></span>
+                                        <div className="flex-1">
+                                            <p className="text-sm text-slate-400">Địa chỉ:</p>
+                                            <p className="text-slate-200 font-medium text-sm line-clamp-2">{order.customerAddress}</p>
+                                        </div>
+                                        <button 
+                                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.customerAddress)}`, '_blank')}
+                                            className="px-3 py-1.5 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                            Bản đồ
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="relative">
