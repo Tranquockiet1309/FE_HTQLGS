@@ -82,12 +82,12 @@ function translateStatus(status) {
 
 // ── Constants ─────────────────────────────────────────────────
 const SUGGESTED = [
+  '🎧 Kết nối với nhân viên hỗ trợ',
   '💰 Giá giặt sấy bao nhiêu?',
   '⏱️ Giặt mất bao lâu?',
   '🛵 Có giao nhận tận nơi không?',
   '📦 Đơn hàng của tôi đang ở đâu?',
   '⭐ Tôi có bao nhiêu điểm tích lũy?',
-  '🎧 Kết nối với nhân viên hỗ trợ',
 ];
 
 const WELCOME = {
