@@ -147,8 +147,8 @@ export const Contact = () => {
                 <div>
                   <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Liên Hệ</p>
                   <p className="text-sm font-bold text-slate-800 dark:text-white">Điện thoại: 0900.999.333</p>
-                  <a href="mailto:salonbooking@example.com" className="text-xs text-blue-500 hover:underline">
-                    Email: salonbooking@example.com
+                  <a href="mailto:kiettran130905@gmail.com" className="text-xs text-blue-500 hover:underline">
+                    Email: kiettran130905@gmail.com
                   </a>
                 </div>
               </div>
